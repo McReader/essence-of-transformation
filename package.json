@@ -1,0 +1,36 @@
+{
+  "name": "essence-of-transformation",
+  "version": "1.0.0",
+  "description": "This is a sample project of using transducers in JavaScript",
+  "main": "src/index.js",
+  "dependencies": {
+    "ramda": "^0.25.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0"
+  },
+  "scripts": {
+    "start": "babel-node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/McReader/essence-of-transformation.git"
+  },
+  "keywords": [
+    "javascript",
+    "transducer",
+    "transducers",
+    "transformer",
+    "fp",
+    "rxjs"
+  ],
+  "author": "Dzianis_Roi dzianis_roi@epam.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/McReader/essence-of-transformation/issues"
+  },
+  "homepage": "https://github.com/McReader/essence-of-transformation#readme"
+}
