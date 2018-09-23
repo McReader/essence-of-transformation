@@ -4,17 +4,23 @@
   "description": "This is a sample project of using transducers in JavaScript",
   "main": "src/index.js",
   "dependencies": {
-    "@types/ramda": "^0.25.38",
-    "ramda": "^0.25.0"
+    "@types/ramda": "0.25.38",
+    "ramda": "0.25.0",
+    "rxjs": "6.3.2",
+    "rxjs-compat": "6.3.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.0",
-    "@babel/node": "^7.0.0",
-    "@babel/preset-env": "^7.1.0"
+    "@babel/core": "7.1.0",
+    "@babel/node": "7.0.0",
+    "@babel/preset-env": "7.1.0",
+    "@types/jest": "23.3.2",
+    "@types/sinon": "5.0.2",
+    "jest": "23.6.0",
+    "sinon": "6.3.4"
   },
   "scripts": {
     "start": "babel-node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
