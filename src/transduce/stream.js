@@ -19,6 +19,8 @@ export default function stream(transducer) {
   const xf = transducer(transformer);
 
   return new Transform({
+    encoding: 'utf-8',
+
     decodeStrings: false,
 
     transform(chunk, encoding, callback) {

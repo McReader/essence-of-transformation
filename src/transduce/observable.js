@@ -21,7 +21,7 @@ function wrap(observer) {
  * @param {Observable} init
  * @return {Observable}
  */
-export default function transduce(transducer, init) {
+export default function observable(transducer, init) {
   return Observable.create((observer) => {
     const xf = transducer(wrap(observer));
 

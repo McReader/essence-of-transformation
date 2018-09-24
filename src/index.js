@@ -6,7 +6,6 @@ import LogInfo from "./logs/LogInfo";
 
 const logs = fs.readFileSync('log.txt', { encoding: 'utf-8' });
 
-
 const isGet = R.propEq('httpVerb', 'GET');
 
 const isNonStatic = R.pipe(

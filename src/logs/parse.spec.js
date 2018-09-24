@@ -4,8 +4,7 @@ import sinon from 'sinon';
 
 import parse from './parse';
 
-import transduce from '../transduce/transduce';
-import lines from '../transduce/lines';
+import observable from '../transduce/observable';
 
 
 describe('parse logs', () => {
@@ -35,27 +34,8 @@ describe('parse logs', () => {
     });
   });
 
-  describe('when input is string', () => {
-    let output;
-
-    beforeAll(() => {
-      input = `127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -
-        127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -
-        127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -
-        127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -`;
-    });
-
-    beforeEach(() => {
-      output = lines(parse, R.flip(R.concat), '', input);
-    });
-
-    it('should return a string with filtered logs in correct format', () => {
-      expect(output).toBe(`HTTP/1.1 visited https://example.com/blog/\nHTTP/1.1 visited https://example.com/`);
-    });
-  });
-
   describe('when input is observable', () => {
-    let onNext;
+    let next;
 
     beforeAll(() => {
       input = of(
@@ -65,24 +45,24 @@ describe('parse logs', () => {
         '127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -',
       );
 
-      onNext = sinon.spy();
+      next = sinon.spy();
     });
 
     beforeEach((done) => {
-      transduce(parse, input).subscribe(onNext, null, done);
+      observable(parse, input).subscribe(next, null, done);
     });
 
     afterEach(() => {
-      onNext.resetHistory();
+      next.resetHistory();
     });
 
-    it('should call onNext twice', () => {
-      expect(onNext.calledTwice).toBe(true);
+    it('should call next twice', () => {
+      expect(next.calledTwice).toBe(true);
     });
 
-    it('should call onNext with logs in correct format', () => {
-      expect(onNext.getCall(0).args[0]).toBe('HTTP/1.1 visited https://example.com/blog/');
-      expect(onNext.getCall(1).args[0]).toBe('HTTP/1.1 visited https://example.com/');
+    it('should call next with logs in correct format', () => {
+      expect(next.getCall(0).args[0]).toBe('HTTP/1.1 visited https://example.com/blog/');
+      expect(next.getCall(1).args[0]).toBe('HTTP/1.1 visited https://example.com/');
     });
   });
 
