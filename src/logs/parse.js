@@ -15,6 +15,7 @@ const parse = R.compose(
   R.filter(isGet),
   R.filter(isStatic),
   R.map(R.toString),
+  R.map(R.concat(R.__, '\n')),
 );
 
 export default parse;
