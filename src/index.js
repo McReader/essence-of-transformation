@@ -9,7 +9,7 @@ const logs = fs.readFileSync('log.txt', { encoding: 'utf-8' });
 
 const isGet = R.propEq('httpVerb', 'GET');
 
-const isStatic = R.pipe(
+const isNonStatic = R.pipe(
   R.view(R.lensProp('path')),
   R.complement(R.test(/\/static\//)),
 );
@@ -19,7 +19,7 @@ const parse = R.pipe(
   R.map(R.append('https://example.com')),
   R.map(R.construct(LogInfo)),
   R.filter(isGet),
-  R.filter(isStatic),
+  R.filter(isNonStatic),
   R.map(R.toString),
 );
 
