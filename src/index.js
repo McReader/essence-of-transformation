@@ -21,7 +21,6 @@ const parse = R.pipe(
   R.filter(isGet),
   R.filter(isStatic),
   R.map(R.toString),
-  R.map(R.concat(R.__, '\n')),
 );
 
 
@@ -29,4 +28,4 @@ const input = R.split('\n', logs);
 const output = parse(input);
 
 
-console.log(R.join('', output));
+console.log(R.join('\n', output));
