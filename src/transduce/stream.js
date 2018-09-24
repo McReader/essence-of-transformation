@@ -5,7 +5,6 @@ import R from 'ramda';
 const transformer = {
   '@@transducer/init': R.always(null),
   '@@transducer/step': (stream, input) => {
-    console.log(input);
     stream.push(input);
   },
   '@@transducer/result': R.identity,
@@ -20,6 +19,8 @@ export default function stream(transducer) {
   const xf = transducer(transformer);
 
   return new Transform({
+    decodeStrings: false,
+
     transform(chunk, encoding, callback) {
       xf['@@transducer/step'](this, chunk);
       callback();
