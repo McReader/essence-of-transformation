@@ -4,8 +4,8 @@ import sinon from 'sinon';
 
 import parse from './parse';
 
-import transduce from '../transduce/observable/transduce';
-import lines from '../transduce/string/lines';
+import transduce from '../transduce/transduce';
+import lines from '../transduce/lines';
 
 
 describe('parse logs', () => {
