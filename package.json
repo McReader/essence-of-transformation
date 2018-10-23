@@ -2,7 +2,7 @@
   "name": "essence-of-transformation",
   "version": "1.0.0",
   "description": "This is a sample project of using transducers in JavaScript",
-  "main": "src/index.js",
+  "main": "src/desired/default.js",
   "dependencies": {
     "@types/ramda": "0.25.38",
     "ramda": "0.25.0",

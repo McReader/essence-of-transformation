@@ -1,11 +1,13 @@
-import {of} from 'rxjs/observable/of';
+import { of } from 'rxjs/observable/of';
 import R from 'ramda';
 import sinon from 'sinon';
+import { Readable } from 'stream';
 
 import parse from './parse';
 
-import transduce from '../transduce/transduce';
-import lines from '../transduce/lines';
+import transduceArray from '../impl/default/transduceArray';
+import transduceObservable from '../impl/rx/transduceObservable';
+import transduceStream from '../impl/stream/transduceStream';
 
 
 describe('parse logs', () => {
@@ -24,7 +26,7 @@ describe('parse logs', () => {
     });
 
     beforeEach(() => {
-      output = R.transduce(parse, R.flip(R.append), [], input);
+      output = transduceArray(parse, R.flip(R.append), [], input);
     });
 
     it('should return string with logs in correct format', () => {
@@ -32,25 +34,6 @@ describe('parse logs', () => {
         'HTTP/1.1 visited https://example.com/blog/',
         'HTTP/1.1 visited https://example.com/',
       ]);
-    });
-  });
-
-  describe('when input is string', () => {
-    let output;
-
-    beforeAll(() => {
-      input = `127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -
-        127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -
-        127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -
-        127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -`;
-    });
-
-    beforeEach(() => {
-      output = lines(parse, R.flip(R.concat), '', input);
-    });
-
-    it('should return a string with filtered logs in correct format', () => {
-      expect(output).toBe(`HTTP/1.1 visited https://example.com/blog/\nHTTP/1.1 visited https://example.com/`);
     });
   });
 
@@ -69,7 +52,7 @@ describe('parse logs', () => {
     });
 
     beforeEach((done) => {
-      transduce(parse, input).subscribe(onNext, null, done);
+      transduceObservable(parse, input).subscribe(onNext, null, done);
     });
 
     afterEach(() => {
@@ -86,11 +69,23 @@ describe('parse logs', () => {
     });
   });
 
-  describe('when input is iterator', () => {
+  describe('when input is stream', () => {
     beforeAll(() => {
-      input = {
-        next: () => {},
-      };
+      const encoding = 'utf-8';
+
+      input = new Readable({
+        read() {
+          this.push('127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -', encoding);
+          this.push('127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -', encoding);
+          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -', encoding);
+          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -', encoding);
+          this.push(null);
+        },
+      });
+    });
+
+    it('should be fine', () => {
+      input.on('data', (v) => console.log(v));
     });
   });
 });
