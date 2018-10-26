@@ -1,13 +1,13 @@
-import { of } from 'rxjs/observable/of';
 import R from 'ramda';
+import { of } from 'rxjs/observable/of';
 import sinon from 'sinon';
-import { Readable } from 'stream';
-
-import parse from './parse';
 
 import transduceArray from '../transduce/array/transduceArray';
 import transduceObservable from '../transduce/rx/transduceObservable';
 import transduceStream from '../transduce/stream/transduceStream';
+
+import parse from './parse';
+import { createReadableStream, logsArray } from './_mocks';
 
 
 describe('parse logs', () => {
@@ -16,12 +16,7 @@ describe('parse logs', () => {
     let output;
 
     beforeAll(() => {
-      input = [
-        '127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -',
-        '127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -',
-        '127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -',
-        '127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -',
-      ];
+      input = logsArray;
     });
 
     beforeEach(() => {
@@ -41,13 +36,7 @@ describe('parse logs', () => {
     let onNext;
 
     beforeAll(() => {
-      input = of(
-        '127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -',
-        '127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -',
-        '127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -',
-        '127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -',
-      );
-
+      input = of(...logsArray);
       onNext = sinon.spy();
     });
 
@@ -77,18 +66,7 @@ describe('parse logs', () => {
     });
 
     beforeEach((done) => {
-      const input = new Readable({
-        encoding: 'utf-8',
-
-        read() {
-          this.push('127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -');
-          this.push('127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -');
-          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -');
-          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -');
-          this.push(null);
-        },
-      });
-
+      const input = createReadableStream(logsArray);
       const output = input.pipe(transduceStream(parse));
 
       output.on('data', onData);
