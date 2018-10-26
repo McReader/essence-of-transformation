@@ -1,13 +1,12 @@
 import R from 'ramda';
-import { of } from 'rxjs/observable/of';
 import sinon from 'sinon';
 
 import transduceArray from '../transduce/array/transduceArray';
-import transduceObservable from '../transduce/rx/transduceObservable';
+import transduceObservable from '../transduce/observable/transduceObservable';
 import transduceStream from '../transduce/stream/transduceStream';
 
 import parse from './parse';
-import { createReadableStream, logsArray } from './_mocks';
+import { createArray, createObservable, createReadableStream } from './_mocks';
 
 
 describe('parse logs', () => {
@@ -16,7 +15,7 @@ describe('parse logs', () => {
     let output;
 
     beforeAll(() => {
-      input = logsArray;
+      input = createArray();
     });
 
     beforeEach(() => {
@@ -36,7 +35,7 @@ describe('parse logs', () => {
     let onNext;
 
     beforeAll(() => {
-      input = of(...logsArray);
+      input = createObservable(createArray());
       onNext = sinon.spy();
     });
 
@@ -66,7 +65,7 @@ describe('parse logs', () => {
     });
 
     beforeEach((done) => {
-      const input = createReadableStream(logsArray);
+      const input = createReadableStream(createArray());
       const output = input.pipe(transduceStream(parse));
 
       output.on('data', onData);

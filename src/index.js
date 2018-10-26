@@ -1,11 +1,10 @@
 import R from 'ramda';
-import { of } from 'rxjs/observable/of';
 
 import parse from './logs/parse';
-import { createReadableStream, logsArray } from './logs/_mocks';
+import { createArray, createObservable, createReadableStream } from './logs/_mocks';
 
 import transduceArray from './transduce/array/transduceArray';
-import transduceObservable from './transduce/rx/transduceObservable';
+import transduceObservable from './transduce/observable/transduceObservable';
 import transduceStream from './transduce/stream/transduceStream';
 
 
@@ -17,7 +16,7 @@ const transducer = parse;
 * =================
 * */
 
-const input = logsArray;
+const input = createArray();
 
 const output = transduceArray(transducer, R.flip(R.append), [], input);
 
@@ -31,7 +30,7 @@ console.groupEnd();
 * =================
 * */
 
-const input$ = of(...logsArray);
+const input$ = createObservable(createArray());
 
 const output$ = transduceObservable(transducer, input$);
 
@@ -44,7 +43,7 @@ output$.subscribe(console.log, null, console.groupEnd);
 * =================
 * */
 
-const inputStream = createReadableStream(logsArray);
+const inputStream = createReadableStream(createArray());
 
 const outputStream = inputStream.pipe(transduceStream(transducer));
 
