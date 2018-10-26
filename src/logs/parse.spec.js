@@ -70,22 +70,42 @@ describe('parse logs', () => {
   });
 
   describe('when input is stream', () => {
-    beforeAll(() => {
-      const encoding = 'utf-8';
+    let onData;
 
+    beforeAll(() => {
+      onData = sinon.spy();
+    });
+
+    beforeEach((done) => {
       input = new Readable({
+        encoding: 'utf-8',
+
         read() {
-          this.push('127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -', encoding);
-          this.push('127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -', encoding);
-          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -', encoding);
-          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -', encoding);
+          this.push('127.0.0.1 - - [26/Feb/2015 19:25:25] "GET /static/r.js HTTP/1.1" 304 -');
+          this.push('127.0.0.5 - - [26/Feb/2015 19:27:35] "GET /blog/ HTTP/1.1" 200 -');
+          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "GET / HTTP/1.1" 200 -');
+          this.push('127.0.0.1 - - [28/Feb/2015 16:44:03] "POST / HTTP/1.1" 200 -');
           this.push(null);
         },
       });
+
+      const result = input.pipe(transduceStream(parse));
+
+      result.on('data', onData);
+      result.on('finish', done);
     });
 
-    it('should be fine', () => {
-      input.on('data', (v) => console.log(v));
+    afterEach(() => {
+      onData.resetHistory();
+    });
+
+    it('should call onData twice', () => {
+      expect(onData.calledTwice).toBe(true);
+    });
+
+    it('should call onNext with logs in correct format', () => {
+      expect(onData.getCall(0).args[0]).toBe('HTTP/1.1 visited https://example.com/blog/');
+      expect(onData.getCall(1).args[0]).toBe('HTTP/1.1 visited https://example.com/');
     });
   });
 });

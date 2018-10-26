@@ -16,4 +16,4 @@ const input = new Readable({
 
 const transducer = R.compose(R.map(Number), R.add(1), R.toString);
 
-input.pipe(transduceStream(transducer).pipe(process.stdout);
+input.pipe(transduceStream(transducer)).pipe(process.stdout);
