@@ -16,7 +16,7 @@ describe('parse logs', () => {
     beforeEach(() => {
       const input = createArray();
       output = transduceArray(parse, R.flip(R.append), [], input);
-    }); // call "parse" function
+    });
 
     it('should return string with logs in correct format', () => {
       expect(output).toEqual([
@@ -36,7 +36,7 @@ describe('parse logs', () => {
     beforeEach((done) => {
       const input = createObservable(createArray());
       transduceObservable(parse, input).subscribe(onNext, null, done);
-    }); // call "parse" function
+    });
 
     afterEach(() => {
       onNext.resetHistory();
@@ -65,7 +65,7 @@ describe('parse logs', () => {
 
       output.on('data', onData);
       output.on('finish', done);
-    });  // call "parse" function
+    });
 
     afterEach(() => {
       onData.resetHistory();
