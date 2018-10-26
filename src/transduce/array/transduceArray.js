@@ -1,8 +1,9 @@
 import R from 'ramda';
-import wrap from '../../utils/wrap';
+import wrap from '../utils/wrap';
 
 const transduceArray = (transducer, stepper, init, input) => {
-  if (R.is(Function, stepper)) {
+  // return R.transduce(transducer, stepper, init, input);
+  if (typeof stepper === 'function') {
     stepper = wrap(stepper);
   }
 

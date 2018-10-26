@@ -1,5 +1,5 @@
 import R from 'ramda';
-import wrap from '../utils/wrap';
+import wrap from '../transduce/utils/wrap';
 
 const transducer = R.map(R.add(1));
 const stepper = wrap(R.flip(R.append));

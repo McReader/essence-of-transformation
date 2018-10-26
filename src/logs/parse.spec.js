@@ -5,15 +5,14 @@ import { Readable } from 'stream';
 
 import parse from './parse';
 
-import transduceArray from '../impl/default/transduceArray';
-import transduceObservable from '../impl/rx/transduceObservable';
-import transduceStream from '../impl/stream/transduceStream';
+import transduceArray from '../transduce/array/transduceArray';
+import transduceObservable from '../transduce/rx/transduceObservable';
+import transduceStream from '../transduce/stream/transduceStream';
 
 
 describe('parse logs', () => {
-  let input;
-
   describe('when input is array', () => {
+    let input;
     let output;
 
     beforeAll(() => {
@@ -27,7 +26,7 @@ describe('parse logs', () => {
 
     beforeEach(() => {
       output = transduceArray(parse, R.flip(R.append), [], input);
-    });
+    }); // call "parse" function
 
     it('should return string with logs in correct format', () => {
       expect(output).toEqual([
@@ -38,6 +37,7 @@ describe('parse logs', () => {
   });
 
   describe('when input is observable', () => {
+    let input;
     let onNext;
 
     beforeAll(() => {
@@ -53,7 +53,7 @@ describe('parse logs', () => {
 
     beforeEach((done) => {
       transduceObservable(parse, input).subscribe(onNext, null, done);
-    });
+    }); // call "parse" function
 
     afterEach(() => {
       onNext.resetHistory();
@@ -77,7 +77,7 @@ describe('parse logs', () => {
     });
 
     beforeEach((done) => {
-      input = new Readable({
+      const input = new Readable({
         encoding: 'utf-8',
 
         read() {
@@ -89,11 +89,11 @@ describe('parse logs', () => {
         },
       });
 
-      const result = input.pipe(transduceStream(parse));
+      const output = input.pipe(transduceStream(parse));
 
-      result.on('data', onData);
-      result.on('finish', done);
-    });
+      output.on('data', onData);
+      output.on('finish', done);
+    });  // call "parse" function
 
     afterEach(() => {
       onData.resetHistory();

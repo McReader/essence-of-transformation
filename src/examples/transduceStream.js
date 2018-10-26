@@ -1,5 +1,5 @@
 import R from 'ramda';
-import transduceStream from '../impl/stream/transduceStream';
+import transduceStream from '../transduce/stream/transduceStream';
 import { Readable } from "stream";
 
 const encoding = 'utf-8';

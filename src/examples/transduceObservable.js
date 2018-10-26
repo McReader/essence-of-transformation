@@ -1,6 +1,6 @@
 import R from 'ramda'
 import { of } from 'rxjs/observable/of';
-import transduceObservable from '../impl/rx/transduceObservable';
+import transduceObservable from '../transduce/rx/transduceObservable';
 
 const input$ = of(1, 2);
 
