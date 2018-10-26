@@ -11,14 +11,10 @@ import { createArray, createObservable, createReadableStream } from './_mocks';
 
 describe('parse logs', () => {
   describe('when input is array', () => {
-    let input;
     let output;
 
-    beforeAll(() => {
-      input = createArray();
-    });
-
     beforeEach(() => {
+      const input = createArray();
       output = transduceArray(parse, R.flip(R.append), [], input);
     }); // call "parse" function
 
@@ -31,15 +27,14 @@ describe('parse logs', () => {
   });
 
   describe('when input is observable', () => {
-    let input;
     let onNext;
 
     beforeAll(() => {
-      input = createObservable(createArray());
       onNext = sinon.spy();
     });
 
     beforeEach((done) => {
+      const input = createObservable(createArray());
       transduceObservable(parse, input).subscribe(onNext, null, done);
     }); // call "parse" function
 
