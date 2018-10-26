@@ -24,8 +24,8 @@ describe('parse logs', () => {
 
     it('should return string with logs in correct format', () => {
       expect(output).toEqual([
-        'HTTP/1.1 visited https://example.com/blog/',
-        'HTTP/1.1 visited https://example.com/',
+        '127.0.0.5 visited https://example.com/blog/',
+        '127.0.0.1 visited https://example.com/',
       ]);
     });
   });
@@ -52,8 +52,8 @@ describe('parse logs', () => {
     });
 
     it('should call onNext with logs in correct format', () => {
-      expect(onNext.getCall(0).args[0]).toBe('HTTP/1.1 visited https://example.com/blog/');
-      expect(onNext.getCall(1).args[0]).toBe('HTTP/1.1 visited https://example.com/');
+      expect(onNext.getCall(0).args[0]).toBe('127.0.0.5 visited https://example.com/blog/');
+      expect(onNext.getCall(1).args[0]).toBe('127.0.0.1 visited https://example.com/');
     });
   });
 
@@ -81,8 +81,8 @@ describe('parse logs', () => {
     });
 
     it('should call onNext with logs in correct format', () => {
-      expect(onData.getCall(0).args[0]).toBe('HTTP/1.1 visited https://example.com/blog/');
-      expect(onData.getCall(1).args[0]).toBe('HTTP/1.1 visited https://example.com/');
+      expect(onData.getCall(0).args[0]).toBe('127.0.0.5 visited https://example.com/blog/');
+      expect(onData.getCall(1).args[0]).toBe('127.0.0.1 visited https://example.com/');
     });
   });
 });
